@@ -1,0 +1,15 @@
+service: MultiCloudDev
+
+provider:
+    name: azure
+
+functions:
+  myfunc:
+    handler: azure_main.main
+    events:
+      - http: true
+        methods:
+          - GET
+
+plugins:
+  - serverless-python-requirements

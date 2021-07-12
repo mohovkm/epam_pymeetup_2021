@@ -1,0 +1,75 @@
+service: MultiCloudDev
+
+provider: ${self:custom.provider.${env:SLS_PROVIDER}}
+
+functions: ${self:custom.functions.${env:SLS_PROVIDER}}
+
+plugins: ${self:custom.plugins.${env:SLS_PROVIDER}}
+
+package: ${self:custom.package.${env:SLS_PROVIDER}}
+
+custom:
+  provider:
+    aws:
+      name: aws
+      runtime: python3.8
+      stage: dev
+
+    azure:
+      name: azure
+      region: West Europe
+      runtime: python3.8
+      os: linux 
+      prefix: "multicloud"
+      stage: dev
+
+  functions:
+    aws:
+      main:
+        handler: lambda_main.handler
+        events:
+          - http:
+              path: /
+              method: get
+        name: aws-MultiCloudDev
+        description: ${self:custom.description}
+        memorySize: 512
+        timeout: 10
+    
+    azure:
+      azure-MultiCloudDev:
+        handler: azure_main.main
+        description: ${self:custom.description}
+        events:
+          - http: true
+            methods:
+              - GET
+            path: /
+            authLevel: function
+
+  description: MiltiCloud solution to publish and run code with Azure Functions and AWS Lambda
+
+  pythonRequirements:
+    dockerizePip: true
+    zip: false
+
+  plugins:
+    azure:
+      - serverless-azure-functions
+      - serverless-python-requirements
+    aws:
+      - serverless-python-requirements
+  
+  package:
+    azure:
+      patterns:
+        - 'classes/**'
+        - 'functions/**'
+        - '!lambda_main.py'
+        - '!azure_main.py'
+    aws:
+      patterns:
+        - 'classes/**'
+        - 'functions/**'
+        - '!azure_main.py'
+
