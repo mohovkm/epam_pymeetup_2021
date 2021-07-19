@@ -40,6 +40,17 @@ tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)"
 tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins"]
 
 [[package]]
+name = "azure-functions"
+version = "1.7.2"
+description = "Azure Functions for Python"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+dev = ["flake8 (>=3.7.9,<3.8.0)", "mypy", "pytest", "pytest-cov", "requests (>=2.0.0,<3.0.0)", "coverage"]
+
+[[package]]
 name = "chardet"
 version = "4.0.0"
 description = "Universal encoding detector for Python 2 and 3"
@@ -117,7 +128,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.8.*"
-content-hash = "80125d7e51183ff3f1cfa8759019cb70fd21319a94c1c32cd6100d6ca16f4473"
+content-hash = "13011579dc781104f7b876ecaa507f9b5d62dde0176b944f706465e352f5cc4d"
 
 [metadata.files]
 aiohttp = [
@@ -166,6 +177,10 @@ async-timeout = [
 attrs = [
     {file = "attrs-21.2.0-py2.py3-none-any.whl", hash = "sha256:149e90d6d8ac20db7a955ad60cf0e6881a3f20d37096140088356da6c716b0b1"},
     {file = "attrs-21.2.0.tar.gz", hash = "sha256:ef6aaac3ca6cd92904cdd0d83f629a15f18053ec84e6432106f7a4d04ae4f5fb"},
+]
+azure-functions = [
+    {file = "azure-functions-1.7.2.tar.gz", hash = "sha256:893f4e696d111162b72e86258b85ca6e444c21b5e3d72048d3689079f107b325"},
+    {file = "azure_functions-1.7.2-py3-none-any.whl", hash = "sha256:51b2949faa11bc2875fdbc0cc073ac9803dd20d0807f46f94e0114924b31d7c1"},
 ]
 chardet = [
     {file = "chardet-4.0.0-py2.py3-none-any.whl", hash = "sha256:f864054d66fd9118f2e67044ac8981a54775ec5b67aed0441892edb553d21da5"},

@@ -1,0 +1,52 @@
+service: AzureQueueSend
+
+provider:
+  name: azure
+  region: West Europe
+  runtime: python3.8
+  prefix: queuesend
+  os: linux 
+  stage: dev
+
+functions:
+#   queue-out:
+#     handler: queue_out.main
+#     events:
+#       - queue: emailQueue
+#         name: queue
+#         connection: AzureWebJobsStorage
+#         accessRights: manage
+      
+#       - sendGrid: grid_service
+#         name: sendGridMessage
+#         direction: out
+#         connection: AzureSendGrid
+#         accessRights: manage
+
+  queue-in:
+    handler: queue_in.main
+    events:
+      - http: true
+        methods:
+          - GET
+        authLevel: function
+        name: request
+
+      - http: true
+        direction: out
+        name: $return
+
+      - queue: emailQueue
+        name: queue
+        direction: out
+        connection: AzureWebJobsStorage
+        accessRights: manage
+
+plugins:
+  - serverless-azure-functions
+  - serverless-python-requirements
+
+# package:
+#   patterns:
+#     - 'classes/**'
+#     - 'functions/**'

@@ -8,6 +8,7 @@ authors = ["Konstantin Mokhov <Konstantin_Mokhov@epam.com>"]
 python = "3.8.*"
 validators = "^0.18.2"
 aiohttp = "^3.7.4"
+azure-functions = "^1.7.2"
 
 [tool.poetry.dev-dependencies]
 

@@ -1,0 +1,21 @@
+[[package]]
+name = "azure-functions"
+version = "1.7.2"
+description = "Azure Functions for Python"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+dev = ["flake8 (>=3.7.9,<3.8.0)", "mypy", "pytest", "pytest-cov", "requests (>=2.0.0,<3.0.0)", "coverage"]
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.8"
+content-hash = "6284e1824c793d22007abff5bb1de941014f3e9172fb10154f50466da794b04d"
+
+[metadata.files]
+azure-functions = [
+    {file = "azure-functions-1.7.2.tar.gz", hash = "sha256:893f4e696d111162b72e86258b85ca6e444c21b5e3d72048d3689079f107b325"},
+    {file = "azure_functions-1.7.2-py3-none-any.whl", hash = "sha256:51b2949faa11bc2875fdbc0cc073ac9803dd20d0807f46f94e0114924b31d7c1"},
+]
