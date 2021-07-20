@@ -1,7 +1,9 @@
+import json
+
 import azure.functions as func
 
 
-def main(
+async def main(
     request: func.HttpRequest, queue: func.Out[func.QueueMessage]
 ) -> func.HttpResponse:
 
@@ -15,8 +17,9 @@ def main(
             name = body.get("name")
 
     if name:
-        queue.set(name)
-        return func.HttpResponse("Value was set to the queue")
+        data = {"recieved": name}
+        queue.set(json.dumps(data))
+        return func.HttpResponse(f"Value {name} was set to the queue")
 
     else:
         return func.HttpResponse(
