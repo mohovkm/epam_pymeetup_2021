@@ -1,12 +1,7 @@
-import os
-import sys
 from typing import Dict
 
 import pytest
-
-sys.path.insert(1, os.path.join(sys.path[0], ".."))
-
-import queue_in  # noqa
+from functions import process_queue_in
 
 
 class MockQueue:
@@ -33,6 +28,9 @@ class MockRequest:
     def prarams(self, value: dict):
         self._params = value
 
+    def get_json(self):
+        return self.params
+
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
@@ -50,6 +48,7 @@ async def test_queue_in_expected(
 ):
     queue = MockQueue()
     request = MockRequest(request_body)
-    result = await queue_in.main(request, queue)
-    assert result.get_body().decode("utf-8") == expected_http
+    request.params = request_body
+    result = await process_queue_in.send_message_to_queue(request, queue)
+    assert result.text == expected_http
     assert queue.get() == expected_queue

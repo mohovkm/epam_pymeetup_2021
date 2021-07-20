@@ -3,6 +3,9 @@ name = "azure_tests"
 version = "0.1.0"
 description = "Serverless Azure solution to push message to the queue, read from it and notify via email"
 authors = ["Konstantin Mokhov <Konstantin_Mokhov@epam.com>"]
+packages = [
+    {include= "functions"}
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
