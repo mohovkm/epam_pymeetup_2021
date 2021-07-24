@@ -9,19 +9,19 @@ provider:
   stage: dev
 
 functions:
-#   queue-out:
-#     handler: queue_out.main
-#     events:
-#       - queue: emailQueue
-#         name: queue
-#         connection: AzureWebJobsStorage
-#         accessRights: manage
+  # queue-out:
+  #   handler: queue_out.main
+  #   events:
+  #     - queue: emailQueue
+  #       name: queue
+  #       connection: AzureWebJobsStorage
+  #       accessRights: manage
       
-#       - sendGrid: grid_service
-#         name: sendGridMessage
-#         direction: out
-#         connection: AzureSendGrid
-#         accessRights: manage
+  #     - sendGrid: true
+  #       name: sendGridMessage
+  #       direction: out
+  #       apiKey: sendGridKey
+  #       from: konstantin_mokhov@epam.com
 
   queue-in:
     handler: queue_in.main
@@ -46,7 +46,6 @@ plugins:
   - serverless-azure-functions
   - serverless-python-requirements
 
-# package:
-#   patterns:
-#     - 'classes/**'
-#     - 'functions/**'
+package:
+  patterns:
+    - 'functions/**'

@@ -1,0 +1,20 @@
+{
+  "disabled": false,
+  "bindings": [
+    {
+      "type": "queueTrigger",
+      "direction": "in",
+      "name": "queue",
+      "queueName": "emailQueue",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "type": "sendGrid",
+      "direction": "out",
+      "name": "$return",
+      "apiKey": "SendGridApiKey"
+    }
+  ],
+  "entryPoint": "main",
+  "scriptFile": "../queue_out.py"
+}

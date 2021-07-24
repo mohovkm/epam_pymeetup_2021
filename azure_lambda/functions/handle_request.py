@@ -1,11 +1,17 @@
 import json
 import logging
 from collections import namedtuple
-from typing import Dict
+from typing import Dict, NamedTuple
 
 from classes import CustomLogic, CustomLogicException
 
-Response = namedtuple("Response", ["text", "status_code"])
+
+class ResponseBase(NamedTuple):
+    text: str
+    status_code: int
+
+
+Response = namedtuple("ResponseBase", ["text", "status_code"])
 
 
 async def handler(body: Dict) -> Response:

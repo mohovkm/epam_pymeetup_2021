@@ -1,11 +1,16 @@
 from typing import Dict
+from unittest.mock import MagicMock, Mock
 
 import pytest
+
 from functions import process_queue_in
 
 
 class MockQueue:
     queue_value: str
+
+    def __init__(self, value: str = None) -> None:
+        self.queue_value = value or ""
 
     def set(self, value):
         self.queue_value = value
@@ -34,21 +39,88 @@ class MockRequest:
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
-    "request_body, expected_queue, expected_http",
+    "request_body, expected_queue, expected_http, expected_status_code",
     [
         (
             {"name": "vasya"},
             '{"recieved": "vasya"}',
             "Value vasya was set to the queue",
+            200,
         ),
     ],
 )
 async def test_queue_in_expected(
-    request_body: Dict[str, str], expected_queue: str, expected_http: str
+    request_body: Dict[str, str],
+    expected_queue: str,
+    expected_http: str,
+    expected_status_code: int,
 ):
     queue = MockQueue()
     request = MockRequest(request_body)
-    request.params = request_body
+
     result = await process_queue_in.send_message_to_queue(request, queue)
+
     assert result.text == expected_http
+    assert result.status_code == expected_status_code
     assert queue.get() == expected_queue
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "request_body, expected_queue, expected_http, expected_status_code",
+    [
+        (
+            {},
+            "",
+            "You must provide name in json body",
+            400,
+        ),
+    ],
+)
+async def test_queue_in_empty_body(
+    request_body: Dict[str, str],
+    expected_queue: str,
+    expected_http: str,
+    expected_status_code: int,
+):
+    queue = MockQueue()
+    request = MockRequest(request_body)
+    process_queue_in.logging = mock_logging = Mock()
+
+    result = await process_queue_in.send_message_to_queue(request, queue)
+
+    assert result.text == expected_http
+    assert result.status_code == expected_status_code
+    assert queue.get() == expected_queue
+    assert mock_logging.error.called
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "request_body, expected_queue, expected_http, expected_status_code",
+    [
+        (
+            None,
+            "",
+            "You must provide name in json body",
+            400,
+        ),
+    ],
+)
+async def test_queue_in_very_empty_body(
+    request_body: Dict[str, str],
+    expected_queue: str,
+    expected_http: str,
+    expected_status_code: int,
+):
+    queue = MockQueue()
+    request = MagicMock()
+    request.get_json.side_effect = ValueError()
+    process_queue_in.logging = mock_logging = Mock()
+
+    result = await process_queue_in.send_message_to_queue(request, queue)
+
+    assert result.text == expected_http
+    assert result.status_code == expected_status_code
+    assert queue.get() == expected_queue
+    assert mock_logging.error.called

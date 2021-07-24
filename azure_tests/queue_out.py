@@ -1,21 +1,8 @@
-import json
-import logging
-
 import azure.functions as func
 
+from functions import process_send_message
 
-def main(queue: func.In[func.QueueMessage], sendGridMessage: func.Out[str]) -> str:
 
-    msg = queue.get("name")
+async def main(queue: func.QueueMessage, sendGridMessage: func.Out[str]) -> str:
 
-    logging.info("recieved message from queue: %s", msg)
-
-    value = f"Sent from Azure Functions. Value from queue: {msg}"
-
-    message = {
-        "personalizations": [{"to": [{"email": "konstantin_mokhov@epam.com"}]}],
-        "subject": "Azure Functions email with SendGrid",
-        "content": [{"type": "text/plain", "value": value}],
-    }
-
-    sendGridMessage.set(json.dumps(message))
+    await process_send_message.recieve_message_and_notify(queue, sendGridMessage)

@@ -12,6 +12,7 @@ python = "^3.8"
 azure-functions = "^1.7.2"
 pytest = "^6.2.4"
 pytest-asyncio = "^0.15.1"
+pydantic = "^1.8.2"
 
 [tool.poetry.dev-dependencies]
 
