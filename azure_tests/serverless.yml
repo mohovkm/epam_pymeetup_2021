@@ -9,19 +9,14 @@ provider:
   stage: dev
 
 functions:
-  # queue-out:
-  #   handler: queue_out.main
-  #   events:
-  #     - queue: emailQueue
-  #       name: queue
-  #       connection: AzureWebJobsStorage
-  #       accessRights: manage
-      
-  #     - sendGrid: true
-  #       name: sendGridMessage
-  #       direction: out
-  #       apiKey: sendGridKey
-  #       from: konstantin_mokhov@epam.com
+  queue-out:
+    handler: queue_out.main
+    useDotenv: true
+    events:
+      - queue: emailQueue
+        name: queue
+        connection: AzureWebJobsStorage
+        accessRights: listen
 
   queue-in:
     handler: queue_in.main

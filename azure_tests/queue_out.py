@@ -1,8 +1,7 @@
 import azure.functions as func
-
 from functions import process_send_message
 
 
-async def main(queue: func.QueueMessage, sendGridMessage: func.Out[str]) -> str:
+async def main(queue: func.QueueMessage) -> str:
 
-    await process_send_message.recieve_message_and_notify(queue, sendGridMessage)
+    await process_send_message.recieve_message_and_notify(queue)
