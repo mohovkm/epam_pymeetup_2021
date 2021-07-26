@@ -7,18 +7,16 @@ from functions import setup_email
 
 
 async def recieve_message_and_notify(queue: func.QueueMessage) -> None:
-    msg = queue.get("name")
+    queue = json.loads(queue)
 
-    logging.info("Recieved message from queue: %s", msg)
+    name = queue.get("name")
+    email = queue.get("email")
 
-    msg = json.decode(msg)
-    reciever = msg.get("reciever")
+    logging.info("Recieved message from queue: %s", json.dumps(queue))
+
     provider = getenv("PROVIDER")
 
-    message = f"""\
-        Subject: Sent from Azure Functions.
-
-        We recieved your orderd. Details: {msg}"""
+    text = f"Hello, {name}, we recieved your order!"
 
     try:
         send_email = setup_email.send_email(provider)
@@ -26,4 +24,4 @@ async def recieve_message_and_notify(queue: func.QueueMessage) -> None:
         logging.error("Can't setup email provider: %s", e)
         return
 
-    send_email(reciever, message)
+    send_email(email, text)

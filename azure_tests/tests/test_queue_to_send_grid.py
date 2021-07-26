@@ -1,11 +1,10 @@
 import json
 from typing import List
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, Mock
 
 import pytest
+from functions import process_send_grid_message
 from pydantic import BaseModel, validator
-
-from functions import process_send_message
 
 
 class ToEmail(BaseModel):
@@ -37,13 +36,13 @@ class Message(BaseModel):
     "queue_out, expected_email_json",
     [
         (
-            '{"data":"message from the queue"}',
+            '{"name":"Mr Nice Guy","email":"mrniceguy@email.com"}',
             {
                 "personalizations": [
                     {
                         "to": [
                             {
-                                "email": "konstantin_mokhov@epam.com",
+                                "email": "mrniceguy@email.com",
                             },
                         ],
                     },
@@ -52,7 +51,7 @@ class Message(BaseModel):
                 "content": [
                     {
                         "type": "text/plain",
-                        "value": 'Sent from Azure Functions. Value from the queue: {"data":"message from the queue"}',
+                        "value": "Hello, Mr Nice Guy, we recieved your order!",
                     },
                 ],
             },
@@ -68,20 +67,20 @@ async def test_queue_to_email_expected(queue_out: str, expected_email_json: dict
 
     sendGridMessage = MagicMock(name="sendGridMessage")
     sendGridMessage.set = set_message_structure
+    process_send_grid_message.logging = mock_logger = Mock()
 
-    queue = MagicMock()
-    queue.get.return_value = queue_out
+    await process_send_grid_message.recieve_message_and_notify(
+        queue_out, sendGridMessage
+    )
 
-    await process_send_message.recieve_message_and_notify(queue, sendGridMessage)
-
-    assert queue.get.called is True
+    assert mock_logger.info.called
 
     # First way of checking
     pydantic_message = Message(**message_structure)
 
     # Second way of checking
     assert pydantic_message.dict()["personalizations"][0]["to"] == [
-        {"email": "konstantin_mokhov@epam.com"}
+        {"email": "mrniceguy@email.com"}
     ]
 
     # Third way (usual) of checking
