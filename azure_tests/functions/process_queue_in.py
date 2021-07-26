@@ -21,17 +21,18 @@ async def send_message_to_queue(request: Dict, queue):
         pass
     else:
         name = body.get("name")
+        email = body.get("email")
 
-    if name:
-        queue.set(json.dumps({"recieved": name}))
+    if name and email:
+        queue.set(json.dumps({"name": name, "email": email}))
         return Response(
-            f"Value {name} was set to the queue",
+            f"Value for {name} was set to the queue",
             200,
         )
 
     else:
         logging.error("Recieved empty or not valid body: %s", json.dumps(body))
         return Response(
-            "You must provide name in json body",
+            "You must provide name and email in json body",
             400,
         )

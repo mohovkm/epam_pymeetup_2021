@@ -1,8 +1,8 @@
+import json
 from typing import Dict
 from unittest.mock import MagicMock, Mock
 
 import pytest
-
 from functions import process_queue_in
 
 
@@ -37,32 +37,38 @@ class MockRequest:
         return self.params
 
 
+@pytest.fixture(autouse=True)
+def mock_queue():
+    return MockQueue
+
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "request_body, expected_queue, expected_http, expected_status_code",
     [
         (
-            {"name": "vasya"},
-            '{"recieved": "vasya"}',
-            "Value vasya was set to the queue",
+            {"name": "vasya", "email": "vasya@va.sya"},
+            {"name": "vasya", "email": "vasya@va.sya"},
+            "Value for vasya was set to the queue",
             200,
         ),
     ],
 )
 async def test_queue_in_expected(
+    mock_queue: MockQueue,
     request_body: Dict[str, str],
     expected_queue: str,
     expected_http: str,
     expected_status_code: int,
 ):
-    queue = MockQueue()
+    queue = mock_queue()
     request = MockRequest(request_body)
 
     result = await process_queue_in.send_message_to_queue(request, queue)
 
     assert result.text == expected_http
     assert result.status_code == expected_status_code
-    assert queue.get() == expected_queue
+    assert json.loads(queue.get()) == expected_queue
 
 
 @pytest.mark.asyncio
@@ -72,18 +78,19 @@ async def test_queue_in_expected(
         (
             {},
             "",
-            "You must provide name in json body",
+            "You must provide name and email in json body",
             400,
         ),
     ],
 )
 async def test_queue_in_empty_body(
+    mock_queue: MockQueue,
     request_body: Dict[str, str],
     expected_queue: str,
     expected_http: str,
     expected_status_code: int,
 ):
-    queue = MockQueue()
+    queue = mock_queue()
     request = MockRequest(request_body)
     process_queue_in.logging = mock_logging = Mock()
 
@@ -102,18 +109,19 @@ async def test_queue_in_empty_body(
         (
             None,
             "",
-            "You must provide name in json body",
+            "You must provide name and email in json body",
             400,
         ),
     ],
 )
 async def test_queue_in_very_empty_body(
+    mock_queue: MockQueue,
     request_body: Dict[str, str],
     expected_queue: str,
     expected_http: str,
     expected_status_code: int,
 ):
-    queue = MockQueue()
+    queue = mock_queue()
     request = MagicMock()
     request.get_json.side_effect = ValueError()
     process_queue_in.logging = mock_logging = Mock()
