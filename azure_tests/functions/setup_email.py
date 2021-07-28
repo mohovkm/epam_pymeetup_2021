@@ -23,7 +23,7 @@ def hotmail_provider_send_mail(receiver_email, text):
     message.attach(text)
 
     server.sendmail(sender_email, receiver_email, message.as_string())
-    server.quit
+    server.quit()
 
 
 PROVIDERS = {
