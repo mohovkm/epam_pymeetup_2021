@@ -37,7 +37,7 @@ class MockRequest:
         return self.params
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture
 def mock_queue():
     return MockQueue
 

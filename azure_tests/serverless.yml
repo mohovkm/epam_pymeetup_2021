@@ -11,12 +11,22 @@ provider:
 functions:
   queue-out:
     handler: queue_out.main
-    useDotenv: true
     events:
       - queue: emailQueue
         name: queue
         connection: AzureWebJobsStorage
         accessRights: listen
+
+      # - http: true
+      #   direction: out
+      #   name: $return
+      
+      # - sendGrid:
+      #     x-azure-settings:
+      #       direction: out
+      #       apiKey: sendGridKey
+      #       name: sendGridMessage
+      #       from: konstantin_mokhov@epam.com
 
   queue-in:
     handler: queue_in.main
@@ -40,7 +50,7 @@ functions:
 plugins:
   - serverless-azure-functions
   - serverless-python-requirements
-
+  - serverless-dotenv-plugin
 package:
   patterns:
     - 'functions/**'

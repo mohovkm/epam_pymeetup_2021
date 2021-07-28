@@ -1,5 +1,6 @@
 import smtplib
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from os import getenv
 
 
@@ -17,8 +18,9 @@ def hotmail_provider_send_mail(receiver_email, text):
     message = MIMEMultipart()
     message["From"] = sender_email
     message["To"] = receiver_email
-    message["Subject"] = "A test mail sent by Python."
-    message["Body"] = text
+    message["Subject"] = "Order notification. Azure and Python."
+    text = MIMEText(text)
+    message.attach(text)
 
     server.sendmail(sender_email, receiver_email, message.as_string())
     server.quit

@@ -7,6 +7,7 @@ from functions import setup_email
 
 
 async def recieve_message_and_notify(queue: func.QueueMessage) -> None:
+    queue = queue.get_body().decode("utf-8")
     queue = json.loads(queue)
 
     name = queue.get("name")
@@ -14,7 +15,7 @@ async def recieve_message_and_notify(queue: func.QueueMessage) -> None:
 
     logging.info("Recieved message from queue: %s", json.dumps(queue))
 
-    provider = getenv("PROVIDER")
+    provider = getenv("EMAIL_PROVIDER")
 
     text = f"Hello, {name}, we recieved your order!"
 

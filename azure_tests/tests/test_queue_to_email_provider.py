@@ -1,3 +1,4 @@
+import json
 from unittest.mock import MagicMock, call, patch
 
 import pytest
@@ -30,6 +31,11 @@ async def test_recieve_message_and_notify(
 ):
     process_send_message.logging = mock_logger = MagicMock()
     send_email = MagicMock()
+    queue_mock = MagicMock()
+    queue_mock.get_body.decode.return_value = queue_out
+
+    json_mock = MagicMock()
+    json_mock.loads.return_value = json.loads(queue_out)
 
     send_email_function = MagicMock()
     send_email_function.return_value = send_email
@@ -37,8 +43,8 @@ async def test_recieve_message_and_notify(
 
     with patch(
         "functions.process_send_message.setup_email.send_email", send_email_function
-    ):
-        await process_send_message.recieve_message_and_notify(queue_out)
+    ), patch("functions.process_send_message.json", json_mock):
+        await process_send_message.recieve_message_and_notify(queue_mock)
         assert send_email.call_args_list == called
         assert mock_logger.info.called
 
@@ -49,6 +55,11 @@ async def test_recieve_message_and_notify(
 )
 async def test_recieve_message_and_notify_fails(queue_out: str):
     mock_logger = MagicMock()
+    queue_mock = MagicMock()
+    queue_mock.get_body.decode.return_value = queue_out
+
+    json_mock = MagicMock()
+    json_mock.loads.return_value = json.loads(queue_out)
 
     setup_email_mock = MagicMock()
     setup_email_mock.send_email.side_effect = KeyError(
@@ -57,13 +68,13 @@ async def test_recieve_message_and_notify_fails(queue_out: str):
 
     with patch("functions.process_send_message.setup_email", setup_email_mock), patch(
         "functions.process_send_message.logging", mock_logger
-    ):
+    ), patch("functions.process_send_message.json", json_mock):
         called = call(
             "Can't setup email provider: %s",
             KeyError("Can't find provider name for a not_exists"),
         )
 
-        await process_send_message.recieve_message_and_notify(queue_out)
+        await process_send_message.recieve_message_and_notify(queue_mock)
         assert mock_logger.info.called
         assert mock_logger.error.called
         assert str(mock_logger.error.call_args_list[0]) == str(called)

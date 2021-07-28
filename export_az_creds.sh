@@ -6,7 +6,7 @@ login_result=$(az login)
 
 echo "Type email with Azure subscription: "
 
-read az_subscription_email
+read -e -p "Your email: " az_subscription_email
 
 if [ -z "$az_subscription_email" ]
 then 
