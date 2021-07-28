@@ -51,7 +51,7 @@ async def test_recieve_message_and_notify(
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
-    "queue_out", [('{"name":"Mr Nice Guy","email":"mrniceguy@email.com"}')]
+    "queue_out", [('{"name":"Mr Nice Guy","email":"mrniceguy@email.com"}',)]
 )
 async def test_recieve_message_and_notify_fails(queue_out: str):
     mock_logger = MagicMock()
