@@ -13,17 +13,9 @@ npm install -g serverless
     - (Python requirements)[https://www.serverless.com/plugins/serverless-python-requirements]
     - (Azure functions)[https://www.serverless.com/plugins/serverless-azure-functions]
 
-Due to bug in serverless framework installation with templated serverless.yml will not work, so we 
-need to swap it with simple yml file, install requirements and swap back:
 ```bash
-mv serverless.yml serverless.yml.bak
-mv serverless_to_install_plugins.yml serverless.yml
-
 sls plugin install -n serverless-python-requirements
 sls plugin install -n serverless-azure-functions
-
-mv serverless.yml serverless_to_install_plugins.yml
-mv serverless.yml.bak serverless.yml
 ```
 
 6. Deploy to Azure

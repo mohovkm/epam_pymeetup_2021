@@ -30,7 +30,7 @@ custom:
         events:
           - http:
               path: /
-              method: get
+              method: post
         name: aws-MultiCloudDev
         description: ${self:custom.description}
         memorySize: 512
@@ -43,7 +43,7 @@ custom:
         events:
           - http: true
             methods:
-              - GET
+              - POST
             path: /
             authLevel: function
 

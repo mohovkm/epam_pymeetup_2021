@@ -17,6 +17,7 @@ Response = namedtuple("ResponseBase", ["text", "status_code"])
 async def handler(body: Dict) -> Response:
     url = body.get("url")
     if not url:
+        logging.error("Missed url in json body: %s", json.dumps(body))
         return Response("You must provide url address in json body", 400)
 
     try:
