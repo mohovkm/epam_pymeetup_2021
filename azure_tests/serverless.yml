@@ -17,23 +17,12 @@ functions:
         connection: AzureWebJobsStorage
         accessRights: listen
 
-      # - http: true
-      #   direction: out
-      #   name: $return
-      
-      # - sendGrid:
-      #     x-azure-settings:
-      #       direction: out
-      #       apiKey: sendGridKey
-      #       name: sendGridMessage
-      #       from: konstantin_mokhov@epam.com
-
   queue-in:
     handler: queue_in.main
     events:
       - http: true
         methods:
-          - GET
+          - POST
         authLevel: function
         name: request
 
@@ -51,6 +40,7 @@ plugins:
   - serverless-azure-functions
   - serverless-python-requirements
   - serverless-dotenv-plugin
+
 package:
   patterns:
     - 'functions/**'
